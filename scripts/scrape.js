@@ -22,22 +22,26 @@ var scrape = function(cb) {
 
     // Now, find and loop through each element that has the "theme-summary" class
     // (i.e, the section holding the articles)
-    //$(".theme-summary").each(function(i, element) {
     $('article').each(function (i, element) {
       // In each .theme-summary, we grab the child with the class story-heading
 
-
-      // Then we grab the inner text of the this element and store it
-      // to the head variable. This is the article headline
-      var head = $(this).children(".story-heading").text().trim();
+    
 
 
-      // Grab the URL of the article
-      var url = $(this).children(".story-heading").children("a").attr("href");
+      var sum = ""
+      if ($(this).find("ul").length) {
+        sum = $(this).find("li").first().text().trim();
+      } else {
+        sum = $(this).find("p").text().trim();
+      };
 
-      // Then we grab any children with the class of summary and then grab it's inner text
-      // We store this to the sum variable. This is the article summary
-      var sum = $(this).children(".summary").text().trim();
+    
+      head = $(this).find("h2").text().trim();
+    
+      url = "https://www.nytimes.com" + $(this).find("a").attr("href");
+
+
+
 
       // So long as our headline and sum and url aren't empty or undefined, do the following
       if (head && sum && url) {
@@ -57,7 +61,6 @@ var scrape = function(cb) {
         articles.push(dataToAdd);
       
       }
-     
     });
     // After our loop is complete, send back the array of articles to the callback function
     cb(articles);
